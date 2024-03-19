@@ -1,1 +1,1 @@
-# nvim config
+# LunarVim config
