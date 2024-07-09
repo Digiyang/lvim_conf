@@ -119,6 +119,7 @@ lvim.plugins = {
   },
   {
     "zbirenbaum/copilot-cmp",
+    lazy = false,
     event = "InsertEnter",
     dependencies = { "zbirenbaum/copilot.lua" },
     config = function()
@@ -127,7 +128,68 @@ lvim.plugins = {
         require("copilot_cmp").setup() -- https://github.com/zbirenbaum/copilot-cmp/blob/master/README.md#configuration
       end, 100)
     end,
-  }
+  },
+  {
+    "hkupty/iron.nvim",
+    config = function(plugins, opts)
+      local iron = require("iron.core")
+      iron.setup({
+        config = {
+          scratch_repl = true,
+          repl_definition = {
+            python = {
+              command = { "python" },
+            },
+          },
+          repl_open_cmd = require("iron.view").right(60),
+        },
+        keymaps = {
+          send_motion = "<space>rc",
+          visual_send = "<space>rs",
+          send_file = "<space>rf",
+          send_line = "<space>rl",
+          send_mark = "<space>rm",
+          mark_motion = "<space>rmc",
+          mark_visual = "<space>rmv",
+          remove_mark = "<space>rrd",
+          cr = "<space>r<cr>",
+          interrupt = "<space>r<space>",
+          exit = "<space>rq",
+          clear = "<space>rx",
+        },
+
+        highlight = {
+          italic = true,
+        },
+        ignore_blank_line = true,
+      })
+
+      vim.keymap.set("n", "<space>rs", "<cmd>IronRepl<cr>")
+      vim.keymap.set("n", "<space>rr", "<cmd>IronRestart<cr>")
+      vim.keymap.set("n", "<space>rF", "<cmd>IronFocus<cr>")
+      vim.keymap.set("n", "<space>rh", "<cmd>IronHide<cr>")
+    end,
+  },
+  {
+    "GCBallesteros/jupytext.nvim",
+    config = true,
+    lazy = false,
+  },
+  {
+    "Exafunction/codeium.nvim",
+    lazy = false,
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "hrsh7th/nvim-cmp",
+    },
+    config = function()
+      require("codeium").setup({
+      })
+    end
+  },
+  -- {
+  --   "luk400/vim-jukit"
+  -- }
 }
 
 -- copilot config
@@ -146,7 +208,7 @@ copilot.setup {
     },
   },
   suggestion = {
-    enabled = false,
+    enabled = true,
     keymap = {
       accept = "<c-l>",
       next = "<c-j>",
@@ -158,3 +220,5 @@ copilot.setup {
 
 local opts = { noremap = true, silent = true }
 vim.api.nvim_set_keymap("n", "<c-s>", "<cmd>lua require('copilot.suggestion').toggle_auto_trigger()<CR>", opts)
+
+-- vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "clangd" })
